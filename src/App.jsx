@@ -7,11 +7,32 @@ function App() {
   const [currentColor, setCurrentColor] = useState('')
   const [selectedImage, setSelectedImage] = useState(null)
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0]
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
     if (file) {
-      const imageUrl = URL.createObjectURL(file)
-      setSelectedImage(imageUrl)
+      // Crear URL para preview
+      const imageUrl = URL.createObjectURL(file);
+      setSelectedImage(imageUrl);
+
+      // Crear FormData para enviar el archivo
+      const formData = new FormData();
+      formData.append('image', file);
+
+      try {
+        // Copiar el archivo a la carpeta public
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) {
+          throw new Error('Error al subir la imagen');
+        }
+
+        console.log('Imagen subida correctamente');
+      } catch (error) {
+        console.error('Error:', error);
+      }
     }
   }
 
