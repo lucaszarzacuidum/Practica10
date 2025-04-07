@@ -5,6 +5,15 @@ import { SizeSelector } from './components/SizeSelector'
 function App() {
   const [currentSize, setCurrentSize] = useState('none')
   const [currentColor, setCurrentColor] = useState('')
+  const [selectedImage, setSelectedImage] = useState(null)
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      const imageUrl = URL.createObjectURL(file)
+      setSelectedImage(imageUrl)
+    }
+  }
 
   return (
     <div className={`App App-header ${currentColor.toLowerCase()}`}>
@@ -31,6 +40,18 @@ function App() {
         </select>
 
         {currentColor && <p>Color seleccionado: {currentColor}</p>}
+      </div>
+
+      <div className='image-uploader'>
+        <label htmlFor="imageUpload">Subir imagen:</label>
+        <input type="file" id="imageUpload" accept="image/*" onChange={handleImageChange} />
+        
+        {selectedImage && (
+          <div className="preview-container">
+            <p>Vista previa:</p>
+            <img src={selectedImage} alt="Vista previa" className="preview-image" />
+          </div>
+        )}
       </div>
     </div>
   )
